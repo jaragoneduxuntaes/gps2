@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--   video :
+	https://www.youtube.com/watch?v=je-VIKhUIgI 
+	-->
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+	<link rel="stylesheet" type="text/css" href="css/index.css" />
+	<!-- 
+		Incluimos bootstrap de bootswatch.com (plantillas libres) . Versión bootstrap descargada despues : 3.3.7
+		 />
+	-->
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css" />
+	<title>Aplicación Base</title>
+	<style>
+		#pagina3 {display: none;
+					width: 100%;
+					height: 100%;
+		}
+		#pagina2 {display: none;}
+		#pagina1 { width: 100%; height: 100% }
+		#contenedor { width: 100%; height: 100% }
+		.header { height: 20%; }
+		.btn { display:block; margin: 40px; }
+		#detener { display: none; }
+		#retardo {font-size: 700%;
+		}
+  
+		
+	</style>
+	
+
+</head>
+<body>
+	
+	<div id="pagina1">
+		<h1> Inicia el GPS </h1>
+		<button id="iniciar" type="button" class="btn btn-primary" onclick="Iniciar();" >Iniciar</button>
+		<button id="anteriores"  type="button" class="btn btn-primary" onclick="Anteriores();" >Anteriores</button>
+		<button id="fin"  type="button" class="btn btn-danger" onclick="Fin();" >Fin</button>
+	</div>
+	<div id="pagina2">
+		Carrera :  
+		<select name="carrera">
+		  <option value="nada"></option>
+		  <option value="Diez">10 Km</option>
+		  <option value="Media">Media maratón</option>
+		  <option value="Maraton">Maratón</option>
+		</select> 
+		<br>
+		<div id="mensajeria" onclick="Aumentar();" >
+			<div id="a1">
+				Ritmo A : <span id="ritmo"> 00:00 </span> 
+			</div>
+			<div id="a01">
+				Ritmo B : <span id="ritmo2"> 00:00 </span> 
+			</div>
+			
+			<div id="a2">
+			Distancia : <span id="distancia"> 0 m </span> 
+			</div>
+			<div id="a3">
+				Tiempo : <span id="tiempo"> 00:00 </span> 
+			</div>
+			<div id="a4">
+				Llegada: <span id="estimado"> </span> <br>
+			</div>
+			<span id="mensaje"> Sin mensajes</span>
+		</div>
+		<button id="inicio"  type="button" class="btn btn-success" onclick="Inicio();" >iniciar</button>
+		<button id="detener"  type="button" class="btn btn-danger" onclick="detener();" >detener</button>
+
+	</div>
+	<div id="pagina3" onclick="suma10();" >
+			Retardo <br>
+			<span id="retardo">  </span>
+	</div>
+	 
+   
+    <script type="text/javascript" src="cordova.js"></script>
+	<!-- Enlace a jquery y bootstrap jlas    	  -->
+	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script> 
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	
+	<script type="text/javascript" src="js/index.js"></script>
+	
+	<script>
+	
+		$(document).ready(function(){
+						
+
+			});
+			
+			/*
+			function hacerFoto(){
+					navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
+															destinationType: Camera.DestinationType.FILE_URI });
+				}
+							
+				function onSuccess(imageURI) {
+					var image = document.getElementById('fotoLocal');
+					image.src = imageURI;
+				}
+						
+				function onFail(message) {
+					alert('Failed because: ' + message);
+				}
+				
+			*/	
+			var ggps = 0 ; /* un 1 cuando está activado */ 
+			
+			var gLat1 = 0;  // Latitud inicial 
+			var gLon1 = 0;  // Longitud inicial
+			var gLat2 = 0; 
+			var gLon2 = 0; 
+			var gTime1 = 0;
+			var gTime2 = 0;
+			var gDistancia = 0;
+			var gCien = 0;
+			var gQuinientos = 0; 
+			var gTiempoA=0;
+			var gTiempoB=0;
+			var gTiempo100 =0;
+			var gTiempo500 = 0;
+			var gTiempo1000=0;
+			var gMil = 0;
+			var gRitmo100 =0;
+			var gRitmo500=0;
+			var gRitmo1000=0;
+			var gRitmoA=0;
+			var gRitmoB=0;
+			
+			var gTiempo = 0;
+			var gTiempo2 = 0;
+			
+			var gRetardo = 3;
+			function Fin(){
+					navigator.app.exitApp();
+			}
+			function Anteriores(){
+					navigator.app.exitApp();
+			}
+			function gps(){
+					$("#mensaje").text("Buscando si GPS activado....");
+					navigator.geolocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 }); 
+		 
+			}
+			var onSuccess = function(position) {
+				 
+				var men = 'Latitude: '      + position.coords.latitude          + '\n' +
+					  'Longitude: '         + position.coords.longitude         + '\n' +
+					  'Altitude: '          + position.coords.altitude          + '\n' +
+					  'Accuracy: '          + position.coords.accuracy          + '\n' +
+					  'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+					  'Heading: '           + position.coords.heading           + '\n' +
+					  'Speed: '             + position.coords.speed             + '\n' +
+					  'Timestamp: '         + position.timestamp                + '\n';
+					 $("#mensaje").text(men);
+					 ggps = 1;
+			};
+		 
+			// onError Callback receives a PositionError object
+			//
+			function onError(error) {
+				var men= 'codigo jlas: '    + error.code    + '\n' +
+					  'message jlas: ' + error.message + '\n';
+				$("#mensaje").text(men);	 
+			}
+			
+		function activapagina( pagina ) {
+			$(pagina).css("display", "block");
+		}
+		function desactivapagina( pagina ) {
+			$(pagina).css("display", "none");
+		}
+		
+		function Iniciar() { 
+			desactivapagina("#pagina1");
+			activapagina("#pagina2");
+			gps(); /* Activa el seguimiento del gps() */
+		
+		
+		}
+		
+		function Inicio() {
+			// Retardo
+			desactivapagina("#pagina1");
+			desactivapagina("#pagina2");
+			activapagina("#pagina3");
+			gRetardo = 3;
+			retardo();
+		}
+		
+		function Empieza() {
+			desactivapagina("#pagina3");
+			activapagina("#pagina2");
+			if (ggps == 1) {
+				seguimiento();
+				iniciar = 1;
+				desactivapagina("#inicio");
+				activapagina("#detener");
+
+			}
+			else {
+				$("#mensaje").text("GPS no activado todavía");	 
+				gps();
+			}
+		}
+		function suma10() {
+			gRetardo = gRetardo + 10;
+		}
+		
+		function retardo() {
+			var intervalo = setInterval(function(){ 
+			$("#retardo").text(gRetardo);	 
+			gRetardo--;
+			if (gRetardo <= 0 ) {
+				clearInterval(intervalo);
+				Empieza();
+			}
+		}, 1000);
+		
+		 }
+		 
+		
+		function seguimiento() {
+			gTime1= Date.now();
+			var watchID = navigator.geolocation.watchPosition(onSuceso, onErrore, { timeout: 3000 });
+		}
+		function onSuceso(position) {
+					gLat1 = gLat2;
+					gLon1 = gLon2;
+					
+					gLat2 = position.coords.latitude;
+					gLon2 = position.coords.longitude; 
+					gTiempoB = position.timestamp;
+					gTime2 = Date.now();
+					
+					 var men = 'Latitud: '  + gLat2   + '\n' +
+					  'Longitud: '         + gLon2 + '\n' +
+					   'Timestamp: '        + gTime2   + '\n';
+					 var men = 'Timestamp: '  + gTime2   + '\n';
+					 $("#mensaje").text(men);	 
+					
+					 if(gLat1 == 0 ) {
+						gLat1 = gLat2;
+						gLon1 = gLon2;
+						gTime1 = gTime2;
+						gTiempoA = gTime2;
+						
+					}
+					var recorrido = 0
+					recorrido = Distancia(gLat2, gLon2, gLat1, gLon1);
+					gTiempo = (gTime2 - gTime1) / 1000 ; // segundos tiempo global 
+					gTiempo2 = (gTiempoB - gTime1) / 1000 ; // segundos tiempo global 
+					
+					gDistancia = gDistancia + (recorrido * 1000); // metros	
+					$("#distancia").text((gDistancia/1000).toFixed(2) + " km" );	 
+					$("#tiempo").text( minutosSegundos(gTiempo) );
+					// Calculamos ritmo cada 100 , 500 y 1000 metros
+					gRitmoA = CalculaRitmo( gDistancia , gTiempo );
+					gRitmoB = CalculaRitmo( gDistancia , gTiempo2 );
+					if(gTiempo100 = 0) {
+						gTiempo100 = gTime2;
+					}
+					if(gTiempo500 = 0) {
+						gTiempo500 = gTime2;
+					}
+					if(gTiempo1000 = 0) {
+						gTiempo1000 = gTime2;
+					}
+					gCien= gCien + (recorrido * 1000); // metros
+					gQuinientos = gQuinientos + (recorrido * 1000); // metros
+					gMil = gMil + (recorrido * 1000);  // metros
+					if (gCien >=  100) {  // Cada 100 metros el ritmo
+							gRitmo100 = CalculaRitmo( gCien, (gTime2 - gTiempo100)/1000 )
+							gCien = 0; gTiempo100 = gTime2;
+					}
+					if (gQuinientos >=  500) {  // Cada 100 metros el ritmo
+							gRitmo500 = CalculaRitmo( gQuinientos, (Time2 - gTiempo500)/1000 )
+							gQuinientos = 0; gTiempo500 = gTime2;
+					}
+					if (gMil >=  1000) {  // Cada 100 metros el ritmo
+							gRitmo1000 = CalculaRitmo( gMil, (gTime2 - gTiempo1000)/1000 )
+							gMil = 0; gTiempo1000 = gTime2;
+					}
+					MostrarRitmo();
+
+			}
+		function CalculaRitmo( d, t) {  // Calcula ritmo según distancia (m) y tiempo (seg)
+		// ritmo en segundos
+		var resul = (t * 1000 ) / d;
+		resul = resul.toFixed(0);
+		var min =  Math.floor(resul / 60);
+		var seg = resul - (min * 60) ;
+		resul =  min +":"+ ( seg < 10 ? '0'+seg : seg);
+		return resul;
+		}
+		function MostrarRitmo() {
+			$("#ritmo").text(gRitmoA);
+			$("#ritmo2").text(gRitmoB);
+		
+		}
+		
+				// onError Callback receives a PositionError object
+				//
+		function minutosSegundos( segundos ) { // Devuelve mm:ss o hh:mm 
+			segundos = Math.floor(segundos);
+			var retorno = "";
+			var minutos = Math.floor(segundos / 60) ;
+			if(minutos > 59) { // Formato hh:mm:ss
+				var horas = Math.floor(minutos / 60 );
+				var minutos = Math.floor( ( segundos - 3600)/ 60 );
+				var seg = segundos - (horas * 3600) - (minutos * 60 );
+				retorno = horas +":"+minutos+":"+segundos;
+			}
+			else { // Formato mm:ss
+				var seg = segundos -  (minutos * 60 );
+				retorno = minutos+":"+ ( seg < 10 ? '0'+seg : seg) ;
+			
+			}
+		return retorno;
+		
+		}		
+		function onErrore(error) {
+					var element = document.getElementById('mensaje');
+					element.innerHTML = 'code: '    + error.code    + '\n' +
+						  'message: ' + error.message + '\n';
+			}
+
+			
+		
+		function detener() {
+			iniciar = 0;
+		}
+		
+		var contador = 0;
+		var iniciar=0;
+		
+		function Aumentar() {
+			if(contador == 0)  { $("#a4").css("font-size", "100%");  }
+			$("#a"+contador).css("font-size", "100%");
+			contador++;
+			$("#a"+contador).css("font-size", "300%");
+			if (contador == 4) { contador = 0; }
+		
+		}
+		
+		function Distancia(lat2, lon2, lat1, lon1) {
+		// http://www.deif.org/blog/calcular-distancia-a-partir-de-datos-gps/
+		// http://www.codecodex.com/wiki/Calculate_Distance_Between_Two_Points_on_a_Globe#JavaScript
+		    var R = 6371; // km  
+			var dLat = (lat2-lat1)*Math.PI/180;  
+			var dLon = (lon2-lon1)*Math.PI/180;   
+			var a = Math.sin(dLat/2) * Math.sin(dLat/2) +  
+			Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2);   
+			var c = 2 * Math.asin(Math.sqrt(a));   
+			var d = R * c;  
+			return d;
+		}
+	
+		
+	</script>
+    
+</body>
+
+</html>
