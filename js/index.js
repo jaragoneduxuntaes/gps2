@@ -33,22 +33,21 @@ function onDeviceReady() {
 
 
 function fail(e) {
+	alert("Fallo jlas");
 	console.log("FileSystem Error");
 	console.dir(e);
 }
 
 
 function writeLog(str) {
+	alert("Escribiendo en log Intento..:");
 	if(!logOb) return;
+	alert("Escribiendo en log..:");
 	var log = str + " [" + (new Date()) + "]\n";
-	console.log("going to log "+log);
 	logOb.createWriter(function(fileWriter) {
-		
 		fileWriter.seek(fileWriter.length);
-		
 		var blob = new Blob([log], {type:'text/plain'});
 		fileWriter.write(blob);
-		console.log("ok, in theory i worked");
 	}, fail);
 }
 
