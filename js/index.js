@@ -6,9 +6,8 @@ var logOb;
 function onDeviceReady() {
 
 	window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir) {
-		console.log("got main dir",dir);
+		alert("Iniciando filewriter");
 		dir.getFile("log.txt", {create:true}, function(file) {
-			console.log("got the file", file);
 			logOb = file;
 			writeLog("App started");			
 		});
