@@ -4,7 +4,7 @@ var logOb;
 
 
 function onDeviceReady() {
-
+	alert("Listo... seguimos");
 	window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir) {
 		alert("Iniciando filewriter");
 		dir.getFile("log.txt", {create:true}, function(file) {
