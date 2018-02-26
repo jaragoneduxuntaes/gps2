@@ -42,6 +42,7 @@
 		<h1> Inicia el GPS </h1>
 		<button id="iniciar" type="button" class="btn btn-primary" onclick="Iniciar();" >Iniciar</button>
 		<button id="anteriores"  type="button" class="btn btn-primary" onclick="Anteriores();" >Anteriores</button>
+		<button id="log"  type="button" class="btn btn-success" onclick="Log();" >Log a file. Probar</button>
 		<button id="fin"  type="button" class="btn btn-danger" onclick="Fin();" >Fin</button>
 	</div>
 	<div id="pagina2">
@@ -113,6 +114,10 @@
 				}
 				
 			*/	
+		
+		
+		
+		
 			var ggps = 0 ; /* un 1 cuando está activado */ 
 			
 			var gLat1 = 0;  // Latitud inicial 
@@ -140,6 +145,39 @@
 			var gTiempo2 = 0;
 			
 			var gRetardo = 3;
+		
+		function write(text)
+						  {
+							window.requestFileSystem(window.LocalFileSystem.PERSISTENT, 0,
+							function (fileSystem)
+							{
+							  fileSystem.root.getFile('jlastest.txt', { create: true, exclusive: false },
+							  function (fileEntry)
+							  {
+								fileEntry.createWriter(function (writer)
+								{
+								alert("fileEntry is file?" + fileEntry.name );
+								alert("fileEntry is file?" + fileEntry.fullPath );
+								  alert("Parece que se ha escrito todo correcto.");  
+								  writer.write('this is only a test: ' + text);
+								  alert("No dió error");  
+								});
+							  },
+							  onErrorF);
+							},
+							onErrorF);
+			 }
+				  function onErrorF()
+				  {
+					console.log("Fallo en la escritura de fichero");
+					alert("Fallo en la escritura de fichero");
+				  }
+		
+		function Log() {
+			alert("logueando... o no ");
+			write("Logeando a ver si va ");
+		}
+		
 			function Fin(){
 					navigator.app.exitApp();
 			}
