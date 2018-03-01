@@ -284,7 +284,7 @@
 					  'Longitud: '         + gLon2 + '\n' +
 					   'Timestamp: '        + gTime2   + '\n';
 					 var men = 'Timestamp: '  + gTime2   + '\n';
-					 $("#mensaje").text(men);	 
+					// $("#mensaje").text(men);	 
 					
 					 if(gLat1 == 0 ) {
 						gLat1 = gLat2;
@@ -321,7 +321,7 @@
 							gCien = 0; gTiempo100 = gTime2;
 					}
 					if (gQuinientos >=  500) {  // Cada 100 metros el ritmo
-							gRitmo500 = CalculaRitmo( gQuinientos, (Time2 - gTiempo500)/1000 )
+							gRitmo500 = CalculaRitmo( gQuinientos, (gTime2 - gTiempo500)/1000 )
 							gQuinientos = 0; gTiempo500 = gTime2;
 					}
 					if (gMil >=  1000) {  // Cada 100 metros el ritmo
@@ -333,17 +333,18 @@
 			}
 		function CalculaRitmo( d, t) {  // Calcula ritmo según distancia (m) y tiempo (seg)
 		// ritmo en segundos
+		var men = "d="+d+" t="+t;
 		var resul = (t * 1000 ) / d;
-		resul = resul.toFixed(0);
+		resul = resul.toFixed(0);  // Resultado en segundos
+		men = men + " resul = "+resul;
 		var min =  Math.floor(resul / 60);
+		men = men + " min = "+min;
 		var seg = resul - (min * 60) ;
+		men = men + " seg = "+seg;
 		resul =  min +":"+ ( seg < 10 ? '0'+seg : seg);
-		return resul;
-		}
-		function MostrarRitmo() {
-			$("#ritmo").text(gRitmo100);
-			$("#ritmo2").text(gRitmo500);
+		$("#mensaje").text(men);
 		
+		return resul;
 		}
 		
 				// onError Callback receives a PositionError object
