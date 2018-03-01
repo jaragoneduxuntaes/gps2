@@ -44,6 +44,8 @@
 		<button id="anteriores"  type="button" class="btn btn-primary" onclick="Anteriores();" >Anteriores</button>
 		<button id="log"  type="button" class="btn btn-success" onclick="Log();" >Log a file. Probar</button>
 		<button id="email"  type="button" class="btn btn-success" onclick="email();" >Probando email</button>
+		<button id="email2"  type="button" class="btn btn-success" onclick="email2();" >Probando email2</button>
+		
 		<button id="fin"  type="button" class="btn btn-danger" onclick="Fin();" >Fin</button>
 	</div>
 	<div id="pagina2">
@@ -98,6 +100,16 @@
 						
 
 			});
+		
+	function email2() {
+		cordova.plugins.email.open({
+		    to:      'jaragoneduxuntaes@gmail.com',
+		    subject: 'Greetings',
+		    body:    '<h1>Nice greetings from Leipzig</h1>',
+		    isHtml:  true
+		});
+		
+	}
 		
 		function email(){
 
