@@ -43,8 +43,8 @@
 		<button id="iniciar" type="button" class="btn btn-primary" onclick="Iniciar();" >Iniciar</button>
 		<button id="anteriores"  type="button" class="btn btn-primary" onclick="Anteriores();" >Anteriores</button>
 		<button id="log"  type="button" class="btn btn-success" onclick="Log();" >Log a file. Probar</button>
-		<button id="email"  type="button" class="btn btn-success" onclick="email();" >Probando email</button>
-		<button id="email2"  type="button" class="btn btn-success" onclick="email2();" >Probando email2</button>
+		<button id="email"  type="button" class="btn btn-success" onclick="email();" >Email con ruta</button>
+		<button id="email2"  type="button" class="btn btn-success" onclick="email2();" >Email con parametros</button>
 		
 		<button id="fin"  type="button" class="btn btn-danger" onclick="Fin();" >Fin</button>
 	</div>
@@ -98,30 +98,27 @@
 	
 		$(document).ready(function(){
 						
-
 			});
 		
-	function email2() {
-		cordova.plugins.email.open({
-		    to:      'jaragoneduxuntaes@gmail.com',
-		    subject: 'Greetings',
-		    body:    '<h1>Nice greetings from Leipzig</h1>',
-		    isHtml:  true
-		});
-		
-	}
-		
+ 		
 		function email(){
-
 			var link = "mailto: jaragoneduxuntaes@gmail.com"
 			var to=" jaragoneduxuntaes@gmail.com";
-			var subj="?subject= Enviando Datos";
-			var bod="&body= Mensaje del email";
+			var subj="?subject= Datos gps2 ";
+			var bod="&body= "+gRuta;
 			;
 			window.location.href = "mailto:"+to+subj+bod;
 		}
-
 			
+		function email2(){
+		var link = "mailto: jaragoneduxuntaes@gmail.com"
+		var to=" jaragoneduxuntaes@gmail.com";
+		var subj="?subject= Parametros gps2 ";
+		var bod="&body= "+gMensaje;
+		;
+		window.location.href = "mailto:"+to+subj+bod;
+		}
+		
 			/*
 			function hacerFoto(){
 					navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
@@ -141,7 +138,8 @@
 		
 		
 		
-		
+			var gMensaje = "";
+			var gRuta = "Segun : Ruta Prueba.kml. Sustituir ahí \n  <coordinates> ";
 			var ggps = 0 ; /* un 1 cuando está activado */ 
 			
 			var gLat1 = 0;  // Latitud inicial 
@@ -193,12 +191,12 @@
 			 }
 				  function onErrorF()
 				  {
-					console.log("Fallo en la escritura de fichero");
+					
 					alert("Fallo en la escritura de fichero");
 				  }
 		
 		function Log() {
-			alert("logueando... o no ");
+			alert("Escribiendo log ");
 			write("Logeando a ver si va ");
 		}
 		
@@ -267,7 +265,6 @@
 				iniciar = 1;
 				desactivapagina("#inicio");
 				activapagina("#detener");
-
 			}
 			else {
 				$("#mensaje").text("GPS no activado todavía");	 
@@ -309,6 +306,8 @@
 					   'Timestamp: '        + gTime2   + '\n';
 					 var men = 'Timestamp: '  + gTime2   + '\n';
 					// $("#mensaje").text(men);	 
+					gRuta = gRuta + "\n" + gLon2 + " " + gLat2 ;
+					
 					
 					 if(gLat1 == 0 ) {
 						gLat1 = gLat2;
@@ -321,7 +320,7 @@
 					recorrido = Distancia(gLat2, gLon2, gLat1, gLon1);
 					gTiempo = (gTime2 - gTime1) / 1000 ; // segundos tiempo global 
 					gTiempo2 = (gTiempoB - gTime1) / 1000 ; // segundos tiempo global 
-					
+					Mensaje( "Datos : gLat2, gLon2, gLat1, gLon1 gTime1 gTime2 : "+gLat2+" " + gLon2 + " " + gLat1 + " " + gLon1 + " " + gTime1+" " +gTime2 );
 					gDistancia = gDistancia + (recorrido * 1000); // metros	
 					$("#distancia").text((gDistancia/1000).toFixed(2) + " km" );	 
 					$("#tiempo").text( minutosSegundos(gTiempo) );
@@ -353,8 +352,16 @@
 							gMil = 0; gTiempo1000 = gTime2;
 					}
 					MostrarRitmo();
-
 			}
+		function MostrarRitmo() {
+			$("#ritmo").text(gRitmo100);
+			$("#ritmo2").text(gRitmo500);
+		}	
+			
+		function Mensaje(valor) {
+		
+			gMensaje = gMensaje+" \n "+valor;
+		}	
 		function CalculaRitmo( d, t) {  // Calcula ritmo según distancia (m) y tiempo (seg)
 		// ritmo en segundos
 		var men = "d="+d+" t="+t;
@@ -367,6 +374,7 @@
 		men = men + " seg = "+seg;
 		resul =  min +":"+ ( seg < 10 ? '0'+seg : seg);
 		$("#mensaje").text(men);
+		Mensaje("Calcula ritmo : "+men);
 		
 		return resul;
 		}
@@ -396,11 +404,12 @@
 					element.innerHTML = 'code: '    + error.code    + '\n' +
 						  'message: ' + error.message + '\n';
 			}
-
 			
 		
 		function detener() {
 			iniciar = 0;
+			desactivapagina("#pagina2");
+			activapagina("#pagina1");
 		}
 		
 		var contador = 0;
