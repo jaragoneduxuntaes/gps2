@@ -104,8 +104,9 @@
 			});
 		
 		function enviarLog() {
-			miLog(gRuta);
-			miLog(gMensaje);
+			
+			miLog( gMensaje );
+			miLog( gRuta );
 		}
 			
  		
@@ -124,7 +125,7 @@
 					bod="&body= "+mensaje.substring(0, 1900) ;
 					window.location.href = "mailto:"+to+subj+bod;
 					mensaje = mensaje.substring(1900);
-					wait(10); // Espera 10 segundos hasta el proximo email. Probarlo sin la espera
+					//wait(10); // Espera 10 segundos hasta el proximo email. Probarlo sin la espera
 				}
 			}
 			else {
