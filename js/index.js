@@ -5,9 +5,9 @@ var logOb;
 
 function onDeviceReady() {
 	
-	window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir) {
+	window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function(dir) {
 		
-		dir.getFile("log.txt", {create:true}, function(file) {
+		dir.getFile("jlaslog.txt", {create:true}, function(file) {
 			logOb = file;
 			writeLog("App started");			
 		});
