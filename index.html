@@ -353,11 +353,11 @@
 					//gRitmoB = CalculaRitmo( gDistancia , gTiempo2 );
 					Mensaje("RitmoA = "+ gRitmoA);
 					$("#ritmoA").text(gRitmoA);
-					if(gTiempo100 = 0) {
+					if(gTiempo100 == 0) {
 						gTiempo100 = gTime2;
 						Mensaje("Tiempo 100 es : "+gTime2);
 					}
-					if(gTiempo500 = 0) {
+					if(gTiempo500 == 0) {
 						gTiempo500 = gTime2;
 					}
 					//if(gTiempo1000 = 0) {
@@ -421,7 +421,7 @@
 				var horas = Math.floor(minutos / 60 );
 				var minutos = Math.floor( ( segundos - 3600)/ 60 );
 				var seg = segundos - (horas * 3600) - (minutos * 60 );
-				retorno = horas +":"+minutos+":"+segundos;
+				retorno = horas +":"+minutos+":"+( seg < 10 ? '0'+seg : seg);
 			}
 			else { // Formato mm:ss
 				var seg = segundos -  (minutos * 60 );
