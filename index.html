@@ -58,23 +58,23 @@
 		</select> 
 		<br>
 		<div id="mensajeria" onclick="Aumentar();" >
-			<div id="a0">
+			<div id="a1">
 				Ritmo Actual : <span id="ritmoA"> 00:00 </span> 
 			</div>
-			<div id="a1">
+			<div id="a2">
 				Ritmo 100 : <span id="ritmo"> 00:00 </span> 
 			</div>
-			<div id="a2">
+			<div id="a3">
 				Ritmo 500 : <span id="ritmo2"> 00:00 </span> 
 			</div>
 			
-			<div id="a3">
+			<div id="a4">
 			Distancia : <span id="distancia"> 0 m </span> 
 			</div>
-			<div id="a4">
+			<div id="a5">
 				Tiempo : <span id="tiempo"> 00:00 </span> 
 			</div>
-			<div id="a5">
+			<div id="a6">
 				Llegada: <span id="actionOne"> </span> <br>
 			</div>
 			<span id="mensaje"> Sin mensajes</span>
@@ -104,15 +104,33 @@
 			});
 		
  		
-		function email(){
+		function email(){ // Controlar la longitud del email (body) para no sobrepasar los 1900 caracteres.
 			var link = "mailto: jaragoneduxuntaes@gmail.com"
 			var to=" jaragoneduxuntaes@gmail.com";
 			var subj="?subject= Datos gps2 ";
-			var bod="&body= "+gRuta +" \n "+gMensaje;
-			;
-			window.location.href = "mailto:"+to+subj+bod;
+			var bod;
+			if (gMensaje.length > 1900) {
+				var i =0;
+				while (gMensaje.length > 1900 ) {
+					i++;
+					subj="?subject= Datos gps2 "+i;
+					bod="&body= "+gRuta +" \n "+gMensaje.substring(0, 1900) ;
+					window.location.href = "mailto:"+to+subj+bod;
+					gMensaje = gMensaje.substring(1900);
+					wait(10); // Espera 10 segundos hasta el proximo email. Probarlo sin la espera
+				}
+			}
+			else {
+				bod="&body= "+gRuta +" \n "+gMensaje;
+				window.location.href = "mailto:"+to+subj+bod;
+			}
+			
 		}
 			
+		function wait(nsegundos) {
+			var objetivo = (new Date()).getTime() + 1000 * Math.abs(nsegundos);
+			while ( (new Date()).getTime() < objetivo );
+		};	
 		
 			/*
 			function hacerFoto(){
@@ -378,8 +396,6 @@
 //		var seg = resul - (min * 60) ;
 //		men = men + " seg = "+seg;
 //		resul =  min +":"+ ( seg < 10 ? '0'+seg : seg);
-		resul = minutosSegundos(resul)
-		
 //		$("#mensaje").text(men);
 		Mensaje("Calcula ritmo : "+men);
 		Mensaje("Ritmo : "+resul);
@@ -422,11 +438,12 @@
 		var iniciar=0;
 		
 		function Aumentar() {
-			if(contador == 0)  { $("#a5").css("font-size", "100%");  }
+			var num = 6;
+			if(contador == 0)  { $("#a"+num).css("font-size", "100%");  }
 			$("#a"+contador).css("font-size", "100%");
 			contador++;
 			$("#a"+contador).css("font-size", "300%");
-			if (contador == 5) { contador = 0; }
+			if (contador == num) { contador = 0; }
 		
 		}
 		
