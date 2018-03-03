@@ -174,7 +174,7 @@
 			var gRitmo100 =0;
 			var gRitmo500=0;
 			var gRitmo1000=0;
-			var gRitmoA=0;
+			var gRitmoA="";
 			var gRitmoB=0;
 			
 			var gTiempo = 0;
@@ -344,9 +344,11 @@
 					// Calculamos ritmo cada 100 , 500 y 1000 metros
 					gRitmoA = CalculaRitmo( gDistancia , gTiempo );
 					//gRitmoB = CalculaRitmo( gDistancia , gTiempo2 );
+					Mensaje("RitmoA = "+ gRitmoA);
 					$("#ritmoA").text(gRitmoA);
 					if(gTiempo100 = 0) {
 						gTiempo100 = gTime2;
+						Mensaje("Tiempo 100 es : "+gTime2);
 					}
 					if(gTiempo500 = 0) {
 						gTiempo500 = gTime2;
