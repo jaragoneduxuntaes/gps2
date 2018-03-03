@@ -51,7 +51,7 @@ function writeLog(str) {
 }
 
 
-function Log(str) {
+function miLog(str) {
 	
 	if(!logOb) return;
 	
