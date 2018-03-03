@@ -13,7 +13,7 @@
 	<!-- 
 		Incluimos bootstrap de bootswatch.com (plantillas libres) . Versión bootstrap descargada despues : 3.3.7
 		 />
-	-->
+	--> 
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css" />
 	<title>Aplicación Base</title>
@@ -43,8 +43,8 @@
 		<button id="iniciar" type="button" class="btn btn-primary" onclick="Iniciar();" >Iniciar</button>
 		<button id="anteriores"  type="button" class="btn btn-primary" onclick="Anteriores();" >Anteriores</button>
 		<button id="log"  type="button" class="btn btn-success" onclick="Log();" >Log a file. Probar</button>
-		<button id="email"  type="button" class="btn btn-success" onclick="email();" >Email con ruta</button>
-		<button id="email2"  type="button" class="btn btn-success" onclick="email2();" >Email con parametros</button>
+		<button id="email"  type="button" class="btn btn-success" onclick="email();" >Enviar Email con datos</button>
+		
 		
 		<button id="fin"  type="button" class="btn btn-danger" onclick="Fin();" >Fin</button>
 	</div>
@@ -105,19 +105,11 @@
 			var link = "mailto: jaragoneduxuntaes@gmail.com"
 			var to=" jaragoneduxuntaes@gmail.com";
 			var subj="?subject= Datos gps2 ";
-			var bod="&body= "+gRuta;
+			var bod="&body= "+gRuta +" \n "+gMensaje;
 			;
 			window.location.href = "mailto:"+to+subj+bod;
 		}
 			
-		function email2(){
-		var link = "mailto: jaragoneduxuntaes@gmail.com"
-		var to=" jaragoneduxuntaes@gmail.com";
-		var subj="?subject= Parametros gps2 ";
-		var bod="&body= "+gMensaje;
-		;
-		window.location.href = "mailto:"+to+subj+bod;
-		}
 		
 			/*
 			function hacerFoto(){
@@ -148,10 +140,11 @@
 			var gLon2 = 0; 
 			var gTime1 = 0;
 			var gTime2 = 0;
+			
 			var gDistancia = 0;
 			var gCien = 0;
 			var gQuinientos = 0; 
-			var gTiempoA=0;
+			
 			var gTiempoB=0;
 			var gTiempo100 =0;
 			var gTiempo500 = 0;
@@ -167,8 +160,9 @@
 			var gTiempo2 = 0;
 			
 			var gRetardo = 3;
+			var gVeces = 3 ; // No empieza hasta gVeces intentos (para no recuperar posiciones antiguas de gps
 		
-		function write(text)
+			function write(text)
 						  {
 							window.requestFileSystem(window.LocalFileSystem.PERSISTENT, 0,
 							function (fileSystem)
@@ -212,7 +206,7 @@
 		 
 			}
 			var onSuccess = function(position) {
-				 
+				 /*
 				var men = 'Latitude: '      + position.coords.latitude          + '\n' +
 					  'Longitude: '         + position.coords.longitude         + '\n' +
 					  'Altitude: '          + position.coords.altitude          + '\n' +
@@ -221,6 +215,8 @@
 					  'Heading: '           + position.coords.heading           + '\n' +
 					  'Speed: '             + position.coords.speed             + '\n' +
 					  'Timestamp: '         + position.timestamp                + '\n';
+					  */
+				var men ="GPS Activado...";	  
 					 $("#mensaje").text(men);
 					 ggps = 1;
 			};
@@ -228,8 +224,8 @@
 			// onError Callback receives a PositionError object
 			//
 			function onError(error) {
-				var men= 'codigo jlas: '    + error.code    + '\n' +
-					  'message jlas: ' + error.message + '\n';
+				//var men= 'codigo jlas: '    + error.code    + '\n' +   'message jlas: ' + error.message + '\n';
+				var men ="GPS no activado...";	  
 				$("#mensaje").text(men);	 
 			}
 			
@@ -283,105 +279,111 @@
 				clearInterval(intervalo);
 				Empieza();
 			}
-		}, 1000);
+				}, 1000);
 		
 		 }
 		 
 		
 		function seguimiento() {
-			gTime1= Date.now();
+			gTime1= Date.now(); 
 			var watchID = navigator.geolocation.watchPosition(onSuceso, onErrore, { timeout: 3000 });
 		}
 		function onSuceso(position) {
+			if( gVeces <= 0 ) { // Tres lecturas sin hacer nada ya que la posición a veces no es la correcta (caché)
 					gLat1 = gLat2;
 					gLon1 = gLon2;
 					
 					gLat2 = position.coords.latitude;
 					gLon2 = position.coords.longitude; 
-					gTiempoB = position.timestamp;
+					//gTiempoB = position.timestamp;
 					gTime2 = Date.now();
 					
-					 var men = 'Latitud: '  + gLat2   + '\n' +
-					  'Longitud: '         + gLon2 + '\n' +
-					   'Timestamp: '        + gTime2   + '\n';
-					 var men = 'Timestamp: '  + gTime2   + '\n';
+					 // var men = 'Latitud: '  + gLat2   + '\n' +
+					 // 'Longitud: '         + gLon2 + '\n' +
+					 //  'Timestamp: '        + gTime2   + '\n';
+					 // var men = 'Timestamp: '  + gTime2   + '\n';
 					// $("#mensaje").text(men);	 
 					
-					gRuta = gRuta + "\n" + gLon2 + "," + gLat2+",0" ;
+					gRuta = gRuta + ' \n ' + gLon2 + "," + gLat2+",0   " ;
 					
 					
 					 if(gLat1 == 0 ) {
 						gLat1 = gLat2;
 						gLon1 = gLon2;
 						gTime1 = gTime2;
-						gTiempoA = gTime2;
-						
 					}
 					var recorrido = 0
 					recorrido = Distancia(gLat2, gLon2, gLat1, gLon1);
-					gTiempo = (gTime2 - gTime1) / 1000 ; // segundos tiempo global 
-					gTiempo2 = (gTiempoB - gTime1) / 1000 ; // segundos tiempo global 
+					gTiempo = (gTime2 - gTime1) / 1000 ; 		// segundos tiempo global 
+					//gTiempo2 = (gTiempoB - gTime1) / 1000 ; 	// segundos tiempo global 
 					Mensaje( "Datos : gLat2, gLon2, gLat1, gLon1 gTime1 gTime2 : "+gLat2+" " + gLon2 + " " + gLat1 + " " + gLon1 + " " + gTime1+" " +gTime2 );
 					gDistancia = gDistancia + (recorrido * 1000); // metros	
 					$("#distancia").text((gDistancia/1000).toFixed(2) + " km" );	 
 					$("#tiempo").text( minutosSegundos(gTiempo) );
 					// Calculamos ritmo cada 100 , 500 y 1000 metros
 					gRitmoA = CalculaRitmo( gDistancia , gTiempo );
-					gRitmoB = CalculaRitmo( gDistancia , gTiempo2 );
+					//gRitmoB = CalculaRitmo( gDistancia , gTiempo2 );
 					if(gTiempo100 = 0) {
 						gTiempo100 = gTime2;
 					}
 					if(gTiempo500 = 0) {
 						gTiempo500 = gTime2;
 					}
-					if(gTiempo1000 = 0) {
-						gTiempo1000 = gTime2;
-					}
+					//if(gTiempo1000 = 0) {
+					//	gTiempo1000 = gTime2;
+					//}
 					gCien= gCien + (recorrido * 1000); // metros
 					gQuinientos = gQuinientos + (recorrido * 1000); // metros
 					gMil = gMil + (recorrido * 1000);  // metros
 					if (gCien >=  100) {  // Cada 100 metros el ritmo
 							gRitmo100 = CalculaRitmo( gCien, (gTime2 - gTiempo100)/1000 )
 							gCien = 0; gTiempo100 = gTime2;
+							$("#ritmo").text(gRitmo100);
 					}
 					if (gQuinientos >=  500) {  // Cada 100 metros el ritmo
 							gRitmo500 = CalculaRitmo( gQuinientos, (gTime2 - gTiempo500)/1000 )
 							gQuinientos = 0; gTiempo500 = gTime2;
+							$("#ritmo2").text(gRitmo500);
 					}
-					if (gMil >=  1000) {  // Cada 100 metros el ritmo
-							gRitmo1000 = CalculaRitmo( gMil, (gTime2 - gTiempo1000)/1000 )
-							gMil = 0; gTiempo1000 = gTime2;
-					}
-					MostrarRitmo();
+					//if (gMil >=  1000) {  // Cada 100 metros el ritmo
+					//		gRitmo1000 = CalculaRitmo( gMil, (gTime2 - gTiempo1000)/1000 )
+					//		gMil = 0; gTiempo1000 = gTime2;
+					//}
+					//MostrarRitmo();
 			}
-		function MostrarRitmo() {
-			$("#ritmo").text(gRitmo100);
-			$("#ritmo2").text(gRitmo500);
-		}	
+				else {
+					gVeces-- ; 
+				}
+		}
+		//function MostrarRitmo() {
+		//	$("#ritmo").text(gRitmo100);
+		//	$("#ritmo2").text(gRitmo500);
+		//}	
 			
 		function Mensaje(valor) {
 		
-			gMensaje = gMensaje+" \n "+valor;
+			gMensaje = gMensaje+' \n '+valor +" ";
 		}	
 		function CalculaRitmo( d, t) {  // Calcula ritmo según distancia (m) y tiempo (seg)
 		// ritmo en segundos
 		var men = "d="+d+" t="+t;
 		var resul = (t * 1000 ) / d;
-		resul = resul.toFixed(0);  // Resultado en segundos
-		men = men + " resul = "+resul;
-		var min =  Math.floor(resul / 60);
-		men = men + " min = "+min;
-		var seg = resul - (min * 60) ;
-		men = men + " seg = "+seg;
-		resul =  min +":"+ ( seg < 10 ? '0'+seg : seg);
-		$("#mensaje").text(men);
+		resul = minutosSegundos( resul );  // Resultado en segundos
+//		men = men + " resul = "+resul;
+//		var min =  Math.floor(resul / 60);
+//		men = men + " min = "+min;
+//		var seg = resul - (min * 60) ;
+//		men = men + " seg = "+seg;
+//		resul =  min +":"+ ( seg < 10 ? '0'+seg : seg);
+		resul = minutosSegundos(gTiempo)
+		
+//		$("#mensaje").text(men);
 		Mensaje("Calcula ritmo : "+men);
+		Mensaje("Ritmo : "+resul);
 		
 		return resul;
 		}
-		
-				// onError Callback receives a PositionError object
-				//
+						
 		function minutosSegundos( segundos ) { // Devuelve mm:ss o hh:mm 
 			segundos = Math.floor(segundos);
 			var retorno = "";
@@ -425,7 +427,7 @@
 		
 		}
 		
-		function Distancia(lat2, lon2, lat1, lon1) {
+		function Distancia(lat2, lon2, lat1, lon1) {  // devuelve distancia en km
 		// http://www.deif.org/blog/calcular-distancia-a-partir-de-datos-gps/
 		// http://www.codecodex.com/wiki/Calculate_Distance_Between_Two_Points_on_a_Globe#JavaScript
 		    var R = 6371; // km  
