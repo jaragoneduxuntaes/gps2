@@ -58,20 +58,23 @@
 		</select> 
 		<br>
 		<div id="mensajeria" onclick="Aumentar();" >
+			<div id="a0">
+				Ritmo Actual : <span id="ritmoA"> 00:00 </span> 
+			</div>
 			<div id="a1">
 				Ritmo 100 : <span id="ritmo"> 00:00 </span> 
 			</div>
-			<div id="a01">
+			<div id="a2">
 				Ritmo 500 : <span id="ritmo2"> 00:00 </span> 
 			</div>
 			
-			<div id="a2">
+			<div id="a3">
 			Distancia : <span id="distancia"> 0 m </span> 
 			</div>
-			<div id="a3">
+			<div id="a4">
 				Tiempo : <span id="tiempo"> 00:00 </span> 
 			</div>
-			<div id="a4">
+			<div id="a5">
 				Llegada: <span id="actionOne"> </span> <br>
 			</div>
 			<span id="mensaje"> Sin mensajes</span>
@@ -375,7 +378,7 @@
 //		var seg = resul - (min * 60) ;
 //		men = men + " seg = "+seg;
 //		resul =  min +":"+ ( seg < 10 ? '0'+seg : seg);
-		resul = minutosSegundos(gTiempo)
+		resul = minutosSegundos(resul)
 		
 //		$("#mensaje").text(men);
 		Mensaje("Calcula ritmo : "+men);
@@ -419,11 +422,11 @@
 		var iniciar=0;
 		
 		function Aumentar() {
-			if(contador == 0)  { $("#a4").css("font-size", "100%");  }
+			if(contador == 0)  { $("#a5").css("font-size", "100%");  }
 			$("#a"+contador).css("font-size", "100%");
 			contador++;
 			$("#a"+contador).css("font-size", "300%");
-			if (contador == 4) { contador = 0; }
+			if (contador == 5) { contador = 0; }
 		
 		}
 		
