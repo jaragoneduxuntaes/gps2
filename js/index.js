@@ -4,9 +4,9 @@ var logOb;
 
 
 function onDeviceReady() {
-	alert("Listo... seguimos");
+	
 	window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir) {
-		alert("Iniciando filewriter");
+		
 		dir.getFile("log.txt", {create:true}, function(file) {
 			logOb = file;
 			writeLog("App started");			
@@ -32,16 +32,16 @@ function onDeviceReady() {
 
 
 function fail(e) {
-	alert("Fallo jlas");
+	
 	console.log("FileSystem Error");
 	console.dir(e);
 }
 
 
 function writeLog(str) {
-	alert("Escribiendo en log Intento..:");
+	
 	if(!logOb) return;
-	alert("Escribiendo en log..:");
+	
 	var log = str + " [" + (new Date()) + "]\n";
 	logOb.createWriter(function(fileWriter) {
 		fileWriter.seek(fileWriter.length);
