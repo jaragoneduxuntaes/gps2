@@ -50,6 +50,23 @@ function writeLog(str) {
 	}, fail);
 }
 
+
+function Log(str) {
+	
+	if(!logOb) return;
+	
+	var log = str + "\n";
+	logOb.createWriter(function(fileWriter) {
+		fileWriter.seek(fileWriter.length);
+		var blob = new Blob([log], {type:'text/plain'});
+		fileWriter.write(blob);
+	}, fail);
+}
+
+
+
+
+
 function justForTesting() {
 	logOb.file(function(file) {
 		var reader = new FileReader();
