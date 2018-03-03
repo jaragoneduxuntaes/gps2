@@ -103,6 +103,11 @@
 						
 			});
 		
+		function enviarLog() {
+			Log(gRuta);
+			Log(gMensaje);
+		}
+			
  		
 		function email(){ // Controlar la longitud del email (body) para no sobrepasar los 1900 caracteres.
 			var link = "mailto: jaragoneduxuntaes@gmail.com"
@@ -110,6 +115,7 @@
 			var subj="?subject= Datos gps2 ";
 			var bod;
 			var mensaje = gRuta + gMensaje;
+			
 			if ( mensaje.length  > 1900) {
 				var i =0;
 				while (mensaje.length > 0 ) {
@@ -180,7 +186,7 @@
 			
 			var gTiempo = 0;
 			var gTiempo2 = 0;
-			
+			var watchID;
 			var gRetardo = 3;
 			var gVeces = 3 ; // No empieza hasta gVeces intentos (para no recuperar posiciones antiguas de gps
 		
@@ -308,7 +314,7 @@
 		
 		function seguimiento() {
 			gTime1= Date.now(); 
-			var watchID = navigator.geolocation.watchPosition(onSuceso, onErrore, { timeout: 3000 });
+			watchID = navigator.geolocation.watchPosition(onSuceso, onErrore, { timeout: 3000 });
 		}
 		function onSuceso(position) {
 			if( gVeces <= 0 ) { // Tres lecturas sin hacer nada ya que la posición a veces no es la correcta (caché)
@@ -433,6 +439,8 @@
 			
 		
 		function detener() {
+			navigator.geolocation.clearWatch(watchID); // 
+			enviarLog();
 			iniciar = 0;
 			desactivapagina("#pagina2");
 			activapagina("#pagina1");
