@@ -109,14 +109,15 @@
 			var to=" jaragoneduxuntaes@gmail.com";
 			var subj="?subject= Datos gps2 ";
 			var bod;
-			if (gMensaje.length > 1900) {
+			var mensaje = gRuta + gMensaje;
+			if ( mensaje.length  > 1900) {
 				var i =0;
-				while (gMensaje.length > 1900 ) {
+				while (mensaje.length > 0 ) {
 					i++;
 					subj="?subject= Datos gps2 "+i;
-					bod="&body= "+gRuta +" \n "+gMensaje.substring(0, 1900) ;
+					bod="&body= "+mensaje.substring(0, 1900) ;
 					window.location.href = "mailto:"+to+subj+bod;
-					gMensaje = gMensaje.substring(1900);
+					mensaje = mensaje.substring(1900);
 					wait(10); // Espera 10 segundos hasta el proximo email. Probarlo sin la espera
 				}
 			}
