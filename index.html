@@ -104,13 +104,15 @@
 			});
 		
 		function enviarLog() {
-			
-			miLog( gMensaje );
-			miLog( gRuta );
+			miLog( gRuta + gMensaje);
+			//miLog( gMensaje );
+			//miLog( gRuta );
 		}
 			
  		
 		function email(){ // Controlar la longitud del email (body) para no sobrepasar los 1900 caracteres.
+			alert("Email desactivado");
+			return;
 			var link = "mailto: jaragoneduxuntaes@gmail.com"
 			var to=" jaragoneduxuntaes@gmail.com";
 			var subj="?subject= Datos gps2 ";
@@ -479,3 +481,4 @@
 </body>
 
 </html>
+
