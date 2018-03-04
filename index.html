@@ -233,7 +233,7 @@
 			}
 			function gps(){
 					$("#mensaje").text("Buscando si GPS activado....");
-					navigator.geolocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 }); 
+					navigator.geolocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 , enableHightAccuracy: true }); 
 		 
 			}
 			var onSuccess = function(position) {
@@ -317,7 +317,7 @@
 		
 		function seguimiento() {
 			gTime1= Date.now(); 
-			watchID = navigator.geolocation.watchPosition(onSuceso, onErrore, { timeout: 3000 });
+			watchID = navigator.geolocation.watchPosition(onSuceso, onErrore, { timeout: 3000 , enableHightAccuracy: true});
 		}
 		function onSuceso(position) {
 			if( gVeces <= 0 ) { // Tres lecturas sin hacer nada ya que la posición a veces no es la correcta (caché)
