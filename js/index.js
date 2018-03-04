@@ -33,8 +33,8 @@ function onDeviceReady() {
 
 function fail(e) {
 	
-	console.log("FileSystem Error");
-	console.dir(e);
+	alert("FileSystem Error");
+	alert(e);
 }
 
 
