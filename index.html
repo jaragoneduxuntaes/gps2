@@ -317,7 +317,10 @@
 		
 		function seguimiento() {
 			gTime1= Date.now(); 
-			watchID = navigator.geolocation.watchPosition(onSuceso, onErrore, { timeout: 3000 , enableHightAccuracy: true});
+			watchID = navigator.geolocation.watchPosition(onSuceso, onErrore, { timeout: 3000 , 
+											  locationProvider: ACTIVITY_PROVIDER,
+											 desiredAccuracy : HIGH_ACCURACY 
+											  });
 		}
 		function onSuceso(position) {
 			if( gVeces <= 0 ) { // Tres lecturas sin hacer nada ya que la posición a veces no es la correcta (caché)
