@@ -323,7 +323,8 @@
 											  });
 		}
 		function onSuceso(position) {
-			if( gVeces <= 0 ) { // Tres lecturas sin hacer nada ya que la posición a veces no es la correcta (caché)
+			//if( gVeces <= 0 ) { // Tres lecturas sin hacer nada ya que la posición a veces no es la correcta (caché)
+					alert("susede");
 					gLat1 = gLat2;
 					gLon1 = gLon2;
 					
@@ -387,10 +388,10 @@
 					//		gMil = 0; gTiempo1000 = gTime2;
 					//}
 					//MostrarRitmo();
-			}
-				else {
-					gVeces-- ; 
-				}
+			//}
+			//	else {
+			//		gVeces-- ; 
+			//	}
 		}
 		//function MostrarRitmo() {
 		//	$("#ritmo").text(gRitmo100);
