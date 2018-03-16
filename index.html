@@ -100,7 +100,7 @@
 	<script>
 	
 		$(document).ready(function(){
-						
+					alert("Todo listo para empezar");
 			});
 		
 		function enviarLog() {
@@ -285,6 +285,7 @@
 		}
 		
 		function Empieza() {
+			alert("Iniciamos...");
 			desactivapagina("#pagina3");
 			activapagina("#pagina2");
 			if (ggps == 1) {
@@ -317,9 +318,8 @@
 		
 		function seguimiento() {
 			gTime1= Date.now(); 
-			watchID = navigator.geolocation.watchPosition(onSuceso, onErrore, { timeout: 3000 , 
-											  locationProvider: ACTIVITY_PROVIDER,
-											 desiredAccuracy : HIGH_ACCURACY 
+			watchID = navigator.geolocation.watchPosition(onSuceso, onErrore, { timeout: 3000  
+											  , enableHightAccuracy: true 
 											  });
 		}
 		function onSuceso(position) {
